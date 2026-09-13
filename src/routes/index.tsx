@@ -6,18 +6,14 @@ import {
   CalendarDays,
   Camera,
   ChevronRight,
-  FileText,
   Heart,
   Image as ImageIcon,
   MessageCircle,
   Mic,
   MoreHorizontal,
   Phone,
-  Search,
   Send,
-  Settings,
   Sparkles,
-  Users,
   Video,
   X,
 } from "lucide-react";
@@ -107,6 +103,11 @@ function KingdomHome() {
     }
 
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        const { error: authError } = await supabase.auth.signInAnonymously();
+        if (authError) throw authError;
+      }
       await saveProfile({ data: { displayName: cleanName } });
     } catch {
       toast.error("We couldn't save your profile yet. Please try again.");
