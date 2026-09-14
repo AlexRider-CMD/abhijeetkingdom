@@ -27,7 +27,6 @@ export const saveCurrentProfile = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: profile, error } = await supabaseAdmin
       .from("profiles")
-      .from("profiles")
       .upsert({ id: context.userId, display_name: data.displayName }, { onConflict: "id" })
       .select("id, display_name, avatar_url, status, about, notifications_enabled, last_seen_at")
       .single();
