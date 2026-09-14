@@ -9,8 +9,7 @@ const profileSchema = z.object({
 export const getCurrentProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await context.supabase
       .from("profiles")
       .select("id, display_name, avatar_url, status, about, notifications_enabled, last_seen_at")
       .eq("id", context.userId)
@@ -22,10 +21,9 @@ export const getCurrentProfile = createServerFn({ method: "GET" })
 
 export const saveCurrentProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input) => profileSchema.parse(input))
+  .validator((input) => profileSchema.parse(input))
   .handler(async ({ context, data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: profile, error } = await supabaseAdmin
+    const { data: profile, error } = await context.supabase
       .from("profiles")
       .upsert({ id: context.userId, display_name: data.displayName }, { onConflict: "id" })
       .select("id, display_name, avatar_url, status, about, notifications_enabled, last_seen_at")
