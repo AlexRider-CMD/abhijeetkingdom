@@ -19,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getCurrentProfile, saveCurrentProfile } from "@/lib/profile.functions";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "Abhijeets Kingdom — Your private family home" },
